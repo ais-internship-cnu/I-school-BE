@@ -7,6 +7,9 @@ from sqlalchemy import and_
 
 app = FastAPI()
 
+origins = [
+    "http://localhost:8000"
+]
 
 app.add_middleware(
     CORSMiddleware,
@@ -123,4 +126,3 @@ async def deleteCourseFromTimetable(userId : int = Body(...,embed=True),
         "data" : None,
         "error" : None  
     }
-
