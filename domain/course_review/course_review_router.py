@@ -1,11 +1,13 @@
 # router는 전체적인 껍데기 ~
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from database import get_db
 from domain.course_review import course_review_schema, course_review_crud
 from utils import Response
+
+from models import CourseReview
 
 router = APIRouter(
     prefix="/api/v1"
@@ -22,3 +24,9 @@ def get_course_reviews(course_name: str, professor: str, db: Session = Depends(g
     course_reviews = course_review_crud.read_course_reviews(course_name, professor, db)
     # api 명세서 형식에 맞게 success, data(course_reviews), error를 return
     return Response(success=True, data=course_reviews, error=None)
+
+@router.post("/course-reviews/")
+# post라 request body로 받아야함
+def post_course_review(request: course_review_schema.CourseReview, db: Session = Depends(get_db)):
+    course_review_crud.create_course_reviews(request, db)
+    return Response(success=True, data=None, error=None)
