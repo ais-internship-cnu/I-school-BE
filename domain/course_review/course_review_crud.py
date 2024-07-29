@@ -24,21 +24,20 @@ def read_course_reviews(course_name: str, professor: str, db: Session):
     data = course_review_schema.CourseReviews(
         courseName=courses[0].name,
         courseReviews=[course_review_schema.CourseReview(
+            courseId=course_review.course_id,
             rating=course_review.rating,
             content=course_review.content
         ) for course_review in total_course_reviews]
     )
     return data
 
+def create_course_reviews(request: course_review_schema.CourseReview, db: Session):
+    review = CourseReview(
+        user_id=request.userId,
+        course_id=request.courseId,
+        rating=request.rating,
+        content=request.content,
+    )
 
-    # combined_reviews = [review for course in filtered_courses for review in course['reviews']]
-    # response = {
-    #     "success": True,
-    #     "data": {
-    #         "courseName": courseName,
-    #         "professor": professor,
-    #         "courseReviews": combined_reviews
-    #     },
-    #     "error": None
-    # }
-    # return response
+    db.add(review)
+    db.commit()
