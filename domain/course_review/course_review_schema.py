@@ -2,9 +2,11 @@
 
 import datetime
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, field_validator
+from sqlalchemy import UUID
 
 class CourseReview(BaseModel):
+    courseId: int
     rating: float
     content: str
 
@@ -12,3 +14,8 @@ class CourseReviews(BaseModel):
     courseName: str
     courseReviews: list[CourseReview]
 
+class CourseReview(BaseModel):
+    userId: UUID
+    courseId: int
+    rating: int
+    content: str
